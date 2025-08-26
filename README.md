@@ -43,20 +43,14 @@ https://www.cnblogs.com/linuxAndMcu/p/19049953
 1. 在 VsCode 中打开新的 Terminal
 2. 安装 Python 虚拟环境, 并激活
 ```
-方式 1：直接用 python
-python -m venv myenv
-方式 2：用 py 指定版本（推荐）
-如果你安装了多个 Python 版本（比如 3.9 和 3.11），可以这样：
 py -3.9 -m venv myenv
-
 myenv\Scripts\activate
 ```
-在 Windows 上，激活命令是：
-myenv\Scripts\activate
+
 3. 启动后端服务
 ```bash
-pip install -r requirements.txt
 cd backend
+pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
@@ -70,7 +64,7 @@ cd frontend
 npm install
 ```
 3. 启动前端服务
-```bash
+```
 npm start
 ```
 
