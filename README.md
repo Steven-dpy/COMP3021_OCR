@@ -48,8 +48,8 @@ myenv\Scripts\activate
 ```
 3. 启动后端服务
 ```bash
-cd backend
 pip install -r requirements.txt
+cd backend
 python manage.py migrate
 python manage.py runserver
 ```
@@ -63,6 +63,7 @@ npm install
 ```
 3. 启动前端服务
 ```bash
+cd frontend
 npm start
 ```
 
