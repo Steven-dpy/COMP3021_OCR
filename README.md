@@ -64,11 +64,11 @@ python manage.py runserver
 1. 在 VsCode 中打开新的 Terminal
 2. 安装前端依赖
 ```
+cd frontend
 npm install
 ```
 3. 启动前端服务
 ```bash
-cd frontend
 npm start
 ```
 
