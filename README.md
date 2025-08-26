@@ -48,6 +48,8 @@ python -m venv myenv
 方式 2：用 py 指定版本（推荐）
 如果你安装了多个 Python 版本（比如 3.9 和 3.11），可以这样：
 py -3.9 -m venv myenv
+
+myenv\Scripts\activate
 ```
 在 Windows 上，激活命令是：
 myenv\Scripts\activate
