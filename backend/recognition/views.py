@@ -57,22 +57,28 @@ def upload_image(request):
         if success:
             return Response({
                     'success': True,
-                    'serial_number': result['serial_number'],
-                    'confidence': result['confidence'],
-                    'processing_time': result['processing_time'],
-                })
+                    'serial_number': result.get['serial_number', ''],
+                    'confidence': result.get['confidence', 0.0],
+                    'processing_time': result.get['processing_time', 0.0],
+                }, status=status.HTTP_200_OK)
 
         else:
             return Response({
                 'success': False,
-                'error': result['error']
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                'serial_number': result.get('serial_number', ''),
+                'confidence': result.get('confidence', 0.0),
+                'processing_time': result.get('processing_time', 0.0),
+                'error': result.get('error', 'OCR recognition', 0.0),
+            }, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({
             'success': False,
-            'error': f'Error occurred while processing image: {str(e)}'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            'serial_number': '',
+            'confidence': 0.0,
+            'processing_time': 0.0,
+            'error': f'DB or server error: {e}'
+        }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
