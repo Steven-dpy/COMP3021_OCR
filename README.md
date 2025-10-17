@@ -9,8 +9,7 @@
 - 数据库：SQLite
 - 图像识别：OpenCV（用于图像处理）
 - OCR引擎：本地免费模型（需进一步评估具体模型）
-  - Tesseract - google 开源 OCR 引擎
-
+  - PaddleOCR
 
 ## 项目结构
 
@@ -34,38 +33,32 @@ cd <项目目录>
 ### 2. 安装依赖
 1. 安装 python 3.9
 2. 安装最新版的 Node.js
-3. 点击以下教程，下载并安装 Tesseract OCR 引擎
+3. 点击以下教程，下载并安装 Nginx, 并将本项目的 nginx.conf 文件替换到 nginx 目录下的 conf 目录下
+https://blog.csdn.net/weixin_44251179/article/details/129700793
 
-https://www.cnblogs.com/linuxAndMcu/p/19049953
+或者，使用以下提示词，给 ChatGPT 安装 nginx
+```
+你好，我想要在 windows 10/11 下安装 nginx, 作为本地的图片服务器
+我有一个现成的 nginx.conf
+请你一步一步教我要如何操作，安装 nginx, 并将 nginx.conf 替换到 nginx 目录下的 conf 目录下
+直到启动 nginx 服务
+```
 
 ### 3. 生成Python虚拟环境并启动后端
 
-1. 在 VsCode 中打开新的 Terminal
-2. 安装 Python 虚拟环境, 并激活
-```
+激活虚拟环境
+```bash
 py -3.9 -m venv myenv
 myenv\Scripts\activate
 ```
-
-3. 启动后端服务
+在 Windows 下的命令行中执行以下命令
 ```bash
-cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+./start.ps1
 ```
 
-### 4. 启动前端
-
-1. 在 VsCode 中打开新的 Terminal
-2. 安装前端依赖
-```
-cd frontend
-npm install
-```
-3. 启动前端服务
-```
-npm start
-```
+就能一键完成虚拟环境更新+后端启动+前端启动。
 
 前端默认运行在 `http://localhost:3000`，后端默认运行在 `http://localhost:8000`。
+
+# 项目截图
+![](./docs/preview.jpeg)

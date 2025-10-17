@@ -1,15 +1,54 @@
 import os
 import time
+import requests
+import base64
 from django.utils import timezone
 from .image_processor import ImageProcessor
-from .ocr_recognizer import OCRRecognizer
+# from .ocr_recognizer import OCRRecognizer
 from .models import SerialNumber
 
 class RecognitionService:
     """Recognition service, coordinates image processing and OCR recognition flow"""
     def __init__(self):
         self.image_processor = ImageProcessor()
-        self.ocr_recognizer = OCRRecognizer()
+        # self.ocr_recognizer = OCRRecognizer()
+
+    def handle_ocr_response(self, response):
+        try:
+            # Extract recognition results and confidence
+            data = response.json()["result"]["ocrResults"]
+            text = []
+            confidences = []
+
+            if len(data) > 0:
+                for i in range(len(data[0]['prunedResult']['rec_texts'])):
+                    confidence = float(data[0]['prunedResult']['rec_scores'][i])
+                    text.append(data[0]['prunedResult']['rec_texts'][i])
+                    confidences.append(confidence)
+
+            # print(data)
+            print(text)
+            print(confidences)
+
+            # Init service results
+            serial_number = ""
+            avg_confidence = 0.0
+            ocr_image_path = ""
+
+            # If no text is recognized
+            if not text:
+                return {"serial_number": "", "confidence": 0.0, "ocr_image": "", "success": False}
+            
+            # Merge text and calculate average confidence
+            serial_number = ' '.join(text).strip()
+            avg_confidence = sum(confidences) / len(confidences) if confidences else 0
+            
+            return {"serial_number": serial_number, "confidence": avg_confidence, "ocr_image": ocr_image_path, "success": True}
+        except Exception as e:
+            print(f"OCR recognition failed: {str(e)}")
+            return {"serial_number": "", "confidence": 0.0, "ocr_image": "", "success": False}
+
+
 
     def process_image(self, image_path):
         """
@@ -23,23 +62,45 @@ class RecognitionService:
             'serial_number': '',
             'confidence': 0.0,
             'processing_time': 0.0,
-            'error': None
+            'error': None,
+            'cropped_image': None,
+            'stretched_image': None,
+            'processed_image': None,
+            'ocr_image': None,
+
         }
 
         try:
             # 1. Image processing
-            processed_path, success = self.image_processor.process(image_path)
-            print(f"Image processing result: {processed_path}, {success}")
+            processed_paths, success = self.image_processor.process(image_path)
+            print(f"Image processing result: {processed_paths['processed_image']}, {success}")
+
 
             if not success:
                 result['error'] = 'Image processing failed'
                 return result, False
 
             # 2. OCR recognition
-            (serial_number, confidence), success = self.ocr_recognizer.recognize(processed_path)
+            # [deprecated] (serial_number, confidence, ocr_image_path), success = self.ocr_recognizer.recognize(processed_paths['processed_image'])
+            # use http://localhost:8001/ocr
+
+            with open(processed_paths['processed_image'], "rb") as file:
+                file_bytes = file.read()
+                file_data = base64.b64encode(file_bytes).decode("ascii")
+
+            payload = {"file": file_data, "fileType": 1}
+            response = requests.post(
+                'http://localhost:8001/ocr',
+                json=payload
+            )
+            data = self.handle_ocr_response(response)
+
+            serial_number = data['serial_number']
+            confidence = data['confidence']
+            ocr_image_path = data['ocr_image']
+            success = data['success']
 
             print(f"OCR recognition result: {serial_number}, {confidence}, {success}")
-
 
             if not success:
                 result['error'] = 'OCR recognition failed'
@@ -51,7 +112,7 @@ class RecognitionService:
 
             recognition_result = SerialNumber(
                 serial_number=serial_number,
-                confidence=confidence / 100.0,  # Convert to 0-1 range
+                confidence=confidence,  # Convert to 0-1 range
                 timestamp=timezone.now(),
                 image_path=image_path,
                 status='success'
@@ -65,13 +126,15 @@ class RecognitionService:
             result.update({
                 'success': True,
                 'serial_number': serial_number,
-                'confidence': confidence / 100.0,
-                'processing_time': processing_time
+                'confidence': confidence,
+                'processing_time': processing_time,
+                'cropped_image': processed_paths['cropped_image'],
+                'stretched_image': processed_paths['stretched_image'],
+                'processed_image': processed_paths['processed_image'],
+                'ocr_image': ocr_image_path,
             })
 
             print(f"Recognition result: {result}")
-
-
             return result, True
 
         except Exception as e:

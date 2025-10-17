@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import os
+import uuid
+from django.conf import settings
 from datetime import datetime
 
 class ImageProcessor:
@@ -11,8 +13,7 @@ class ImageProcessor:
         self.upper_blue = np.array([130, 255, 255])
         
         # Create temporary directory
-        # self.temp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_images')
-        self.temp_dir = os.path.join('D:\documents\projects\make-money-lib\web-projects\comp3021-M1151_ai_project', 'temp_images')
+        self.temp_dir = os.path.join(settings.BASE_DIR, '..', 'share')
         os.makedirs(self.temp_dir, exist_ok=True)
 
     def detect_blue_part(self, image_path):
@@ -68,6 +69,37 @@ class ImageProcessor:
             print(f"Blue part detection failed: {str(e)}")
             return None, False
 
+
+    def stretch_to_square(self, image_path):
+        """将矩形图片拉伸为正方形（宽高相等）"""
+        try:
+            image = cv2.imread(image_path)
+
+            # 获取原始图像尺寸
+            height, width = image.shape[:2]
+            
+            # 确定正方形的边长（取原始宽高中的最大值）
+            square_size = max(width, height)
+            
+            # 拉伸图像到正方形尺寸
+            square_image = cv2.resize(image, (square_size, square_size), interpolation=cv2.INTER_AREA)
+
+            # Save stretched image
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            stretched_path = os.path.join(self.temp_dir, f'stretched_{timestamp}.jpg')
+
+            print(f"Stretched image saved to: {stretched_path}")
+
+            # Check if save image successfully
+            if not cv2.imwrite(stretched_path, square_image) or not os.path.exists(stretched_path):
+                raise Exception("Stretched image not saved")
+            
+            return stretched_path, True
+        except Exception as e:
+            print(f"Stretch to square failed: {str(e)}")
+            return None, False
+
+
     def preprocess_image(self, image_path):
         """
         Preprocess image to improve OCR accuracy
@@ -106,14 +138,15 @@ class ImageProcessor:
                 cv2.WARP_POLAR_LINEAR
             )
             polar_rotated = cv2.rotate(polar, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            polar_copy1 = polar_rotated.copy()
-            polar_copy2 = polar_rotated.copy()
-            combined = np.hstack([polar_copy1, polar_rotated, polar_copy2])
+            # polar_copy1 = polar_rotated.copy()
+            # polar_copy2 = polar_rotated.copy()
+            # combined = np.hstack([polar_copy1, polar_rotated, polar_copy2])
 
             # Save preprocessed image
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            processed_path = os.path.join(self.temp_dir, f'processed_{timestamp}.jpg')
-            cv2.imwrite(processed_path, combined)
+            id = uuid.uuid4()
+            timestamp = datetime.now().strftime('%Y%m%d')
+            processed_path = os.path.join(self.temp_dir, f'processed_{timestamp}_{id}.jpg')
+            cv2.imwrite(processed_path, polar_rotated)
 
             return processed_path, True
 
@@ -131,10 +164,24 @@ class ImageProcessor:
         cropped_path, success = self.detect_blue_part(image_path)
         if not success:
             return None, False
-
+        
+        # Stretch to square
+        stretched_path, success = self.stretch_to_square(cropped_path)
+        if not success:
+            return None, False
+        
         # Preprocess image
-        processed_path, success = self.preprocess_image(cropped_path)
-        return processed_path, success
+        processed_path, success = self.preprocess_image(stretched_path)
+
+        if not success:
+            return None, False
+
+
+        return {
+            'cropped_image': cropped_path,
+            'stretched_image': stretched_path,
+            'processed_image': processed_path,
+        }, success
 
     def cleanup(self):
         """Clean up temporary files"""

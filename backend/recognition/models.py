@@ -7,6 +7,7 @@ class SerialNumber(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, verbose_name="Recognition Time")
     image_path = models.CharField(max_length=255, verbose_name="Image Path")
     status = models.CharField(max_length=20, default="success", verbose_name="Recognition Status")
+    
 
     class Meta:
         verbose_name = "Serial Number Recognition Result"

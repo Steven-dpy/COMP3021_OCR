@@ -49,3 +49,4 @@ coverage.xml
 *.swo
 
 uploads/
+temp_ocr_images/
