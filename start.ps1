@@ -52,7 +52,7 @@ Write-Host "Press Ctrl+C to stop service" -ForegroundColor Yellow
 Write-Host ""
 
 # Start OCR service process
-Start-Process -FilePath "powershell" -ArgumentList "-NoExit -Command `"& .\myenv\Scripts\Activate.ps1; paddlex --install serving; paddlex --serve --pipeline OCR --port 8001`"" -WindowStyle Normal
+Start-Process -FilePath "powershell" -ArgumentList "-NoExit -Command `"& .\myenv\Scripts\Activate.ps1; paddlex --install serving; paddlex --serve --pipeline OCR --lang en --port 8001`"" -WindowStyle Normal
 
 # Wait for OCR service to start
 Write-Host "Waiting for OCR service to start..." -ForegroundColor Cyan
