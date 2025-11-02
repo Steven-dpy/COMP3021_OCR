@@ -1,64 +1,67 @@
-# 项目简介
+Project Title Image Processing Software for Serial Number Identification
 
-本项目是一个基于 **React** 和 **Django** 的前后端分离 Web 应用。前端使用 React 实现，后端采用 Django 提供 API 支持，旨在实现高效、可扩展的 Web 服务。
+# Project Introduction
 
-## 技术栈
+This project is a **React** and **Django** based web application with a separated front-end and back-end architecture.  
+The front-end is built with React, while the back-end uses Django to provide API support, aiming to create an efficient and scalable web service.
 
-- 前端：React, JavaScript, HTML, CSS
-- 后端：Django, Django REST framework
-- 数据库：SQLite
-- 图像识别：OpenCV（用于图像处理）
-- OCR引擎：本地免费模型（需进一步评估具体模型）
-  - PaddleOCR
+## Tech Stack
 
-## 项目结构
+- Frontend: React, JavaScript, HTML, CSS  
+- Backend: Django, Django REST framework  
+- Database: SQLite  
+- Image Processing: OpenCV (for image processing)  
+- OCR Engine: Local open-source model (requires further evaluation)  
+  - PaddleOCR  
+
+## Project Structure
 
 ```
-├── frontend/      # React 前端项目目录
-├── backend/       # Django 后端项目目录
-├── docs/          # 项目文档目录
-  ├── images.zip  # 可用于测试图片
-└── README.md      # 项目说明文档
+├── frontend/      # React frontend project directory
+├── backend/       # Django backend project directory
+├── docs/          # Project documentation directory
+  ├── images.zip  # Test images
+└── README.md      # Project documentation file
 ```
 
-## 快速开始
+## Quick Start
 
-### 1. 克隆项目
+### 1. Clone the Project
 
 ```bash
-git clone <项目地址>
-cd <项目目录>
+git clone <project_url>
+cd <project_directory>
 ```
 
-### 2. 安装依赖
-1. 安装 python 3.9
-2. 安装最新版的 Node.js
-3. 点击以下教程，下载并安装 Nginx, 并将本项目的 nginx.conf 文件替换到 nginx 目录下的 conf 目录下
-https://blog.csdn.net/weixin_44251179/article/details/129700793
+### 2. Install Dependencies
+1. Install Python 3.10  
+2. Install the latest version of Node.js  
+3. Follow the tutorial below to download and install Nginx, then replace the `nginx.conf` file in the Nginx installation directory under the `conf` folder.  
+https://nginx.org/  
 
-或者，使用以下提示词，给 ChatGPT 安装 nginx
+Alternatively, you can use the following prompt to ask ChatGPT to help you install Nginx:
 ```
-你好，我想要在 windows 10/11 下安装 nginx, 作为本地的图片服务器
-我有一个现成的 nginx.conf
-请你一步一步教我要如何操作，安装 nginx, 并将 nginx.conf 替换到 nginx 目录下的 conf 目录下
-直到启动 nginx 服务
+Hi, I want to install Nginx on Windows 10/11 as a local image server.
+I already have an nginx.conf file.
+Please teach me step-by-step how to install Nginx, replace the nginx.conf file in the Nginx directory under conf, and start the Nginx service.
 ```
 
-### 3. 生成Python虚拟环境并启动后端
+### 3. Create Python Virtual Environment and Start Backend
 
-激活虚拟环境
+Activate the virtual environment:
 ```bash
-py -3.9 -m venv myenv
+py -3.10 -m venv myenv
 myenv\Scripts\activate
 ```
-在 Windows 下的命令行中执行以下命令
+
+Then, run the following command in Windows PowerShell:
 ```bash
 ./start.ps1
 ```
 
-就能一键完成虚拟环境更新+后端启动+前端启动。
+This will automatically complete the environment update and start both the backend and frontend.
 
-前端默认运行在 `http://localhost:3000`，后端默认运行在 `http://localhost:8000`。
+The frontend runs on `http://localhost:3000`, and the backend runs on `http://localhost:8000`.
 
-# 项目截图
+# Project Screenshot
 ![](./docs/preview.jpeg)
