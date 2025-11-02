@@ -44,7 +44,7 @@ https://nginx.org/
 
 Activate the virtual environment:
 ```bash
-py -3.10 -m venv myenv
+py -3.9 -m venv myenv
 myenv\Scripts\activate
 ```
 

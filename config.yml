@@ -1,0 +1,12 @@
+pipeline:
+  type: OCR
+  model_dir: ./temp
+  lang: en
+  use_angle_cls: true
+  use_gpu: true
+  gpu_id: 0
+
+server:
+  port: 8001
+  host: 0.0.0.0
+  workers: 4

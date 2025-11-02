@@ -93,6 +93,8 @@ export default function App() {
 
   /** Simulate recognition */
   const startRecognition = (rowId) => {
+  // Return a Promise so we can await it in batch recognition
+  return new Promise((resolve) => {
     // get image
     const row = rows.find((r) => r.id === rowId)
     if (!row || !row.image) {
@@ -131,6 +133,7 @@ export default function App() {
               : r
           )
         )
+        resolve() // Resolve after success
       },
       onError: (msg) => {
         clearInterval(intervalId)
@@ -141,7 +144,9 @@ export default function App() {
               : r
           )
         )
+        resolve() // Resolve after success
       },
+    })
     })
   }
 
@@ -156,22 +161,37 @@ export default function App() {
     }
   }
 
-  const startRecognitionAll = () => {
-    rows.forEach((row) => {
+  // const startRecognitionAll = () => {
+  //   rows.forEach((row) => {
+  //     if (row.image) {
+  //       startRecognition(row.id)
+  //     }
+  //   })
+  // }
+  const startRecognitionAll = async () => {
+    // Process each row sequentially
+    for (const row of rows) {
       if (row.image) {
-        startRecognition(row.id)
+        await startRecognition(row.id)
       }
-    })
+    }
   }
 
-  const startRecognitionNoResult = () => {
-    rows.forEach((row) => {
+  // const startRecognitionNoResult = () => {
+  //   rows.forEach((row) => {
+  //     if (row.image && row.status !== 'success') {
+  //       startRecognition(row.id)
+  //     }
+  //   })
+  // }
+  const startRecognitionNoResult = async () => {
+    // Process each row sequentially if not already success
+    for (const row of rows) {
       if (row.image && row.status !== 'success') {
-        startRecognition(row.id)
+        await startRecognition(row.id)
       }
-    })
+    }
   }
-
   const printRecognitionResult = () => {
     // Print the table id = "printTable"
     window.print()
