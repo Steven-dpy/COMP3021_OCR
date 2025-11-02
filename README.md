@@ -39,12 +39,6 @@ cd <project_directory>
 3. Follow the tutorial below to download and install Nginx, then replace the `nginx.conf` file in the Nginx installation directory under the `conf` folder.  
 https://nginx.org/  
 
-Alternatively, you can use the following prompt to ask ChatGPT to help you install Nginx:
-```
-Hi, I want to install Nginx on Windows 10/11 as a local image server.
-I already have an nginx.conf file.
-Please teach me step-by-step how to install Nginx, replace the nginx.conf file in the Nginx directory under conf, and start the Nginx service.
-```
 
 ### 3. Create Python Virtual Environment and Start Backend
 
