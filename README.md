@@ -34,9 +34,10 @@ cd <project_directory>
 ```
 
 ### 2. Install Dependencies
-1. Install Python 3.10  
-2. Install the latest version of Node.js  
-3. Follow the tutorial below to download and install Nginx, then replace the `nginx.conf` file in the Nginx installation directory under the `conf` folder.  
+1. Install Python 3.9.2  
+2. Install pip version 20.2.3
+3. Install the latest version of Node.js  
+4. Follow the tutorial below to download and install Nginx, then replace the `nginx.conf` file in the Nginx installation directory under the `conf` folder.  
 https://nginx.org/  
 
 
